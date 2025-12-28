@@ -1,0 +1,477 @@
+@import "tailwindcss";
+
+/* HotMeet V3 - Performance Optimized CSS */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+:root {
+    --bg-base: #08080C;
+    --bg-surface: #0E0E14;
+    --bg-card: #1C1C28;
+    --brand-red: #FF2D55;
+    --brand-orange: #FF6B35;
+    --brand-pink: #FF3D81;
+    --brand-purple: #8B5CF6;
+    --accent-gold: #FFD700;
+    --accent-green: #00FF87;
+    --text-primary: #FFFFFF;
+    --text-secondary: #B0B0C0;
+    --text-muted: #6B6B80;
+    --border: rgba(255, 255, 255, 0.06);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: var(--bg-base);
+    color: var(--text-primary);
+    line-height: 1.5;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #333;
+    border-radius: 3px;
+}
+
+.hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+/* Card Frame - Simplified */
+.card-frame {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card-frame:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+}
+
+/* Buttons */
+.btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px 18px;
+    background: linear-gradient(135deg, var(--brand-red), var(--brand-orange));
+    border: none;
+    border-radius: 12px;
+    color: white;
+    font-weight: 700;
+    font-size: 13px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.btn-primary:hover {
+    opacity: 0.9;
+}
+
+.btn-primary:active {
+    transform: scale(0.97);
+}
+
+.btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 14px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--text-secondary);
+    font-weight: 600;
+    font-size: 12px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.btn-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-icon:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+/* Badges */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 8px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.badge-premium {
+    background: rgba(255, 215, 0, 0.15);
+    border-color: rgba(255, 215, 0, 0.3);
+    color: var(--accent-gold);
+}
+
+.badge-online {
+    background: rgba(0, 255, 135, 0.12);
+    border-color: rgba(0, 255, 135, 0.25);
+    color: var(--accent-green);
+}
+
+.badge-verified {
+    background: rgba(0, 180, 255, 0.12);
+    border-color: rgba(0, 180, 255, 0.25);
+    color: #00D4FF;
+}
+
+/* Status Dot - Simple animation */
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.status-online {
+    background: var(--accent-green);
+    box-shadow: 0 0 6px var(--accent-green);
+}
+
+.status-busy {
+    background: var(--brand-orange);
+}
+
+.status-offline {
+    background: #555;
+}
+
+/* Section Header */
+.section-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.section-icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    font-size: 18px;
+}
+
+.section-title {
+    font-size: 18px;
+    font-weight: 800;
+}
+
+.section-subtitle {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+/* Glass - Simplified (less blur) */
+.glass {
+    background: rgba(14, 14, 20, 0.85);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+/* Gradients */
+.text-gradient-hot {
+    background: linear-gradient(135deg, var(--brand-red), var(--brand-orange), var(--brand-pink));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.text-gradient-gold {
+    background: linear-gradient(135deg, var(--accent-gold), var(--brand-orange));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    .card-frame:hover {
+        transform: none;
+        box-shadow: none;
+    }
+
+    .glass {
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+        background: rgba(14, 14, 20, 0.95);
+    }
+}
+
+/* Premium Button Animation */
+@keyframes premiumPulse {
+
+    0%,
+    100% {
+        box-shadow: 0 4px 20px rgba(255, 45, 85, 0.4);
+    }
+
+    50% {
+        box-shadow: 0 4px 30px rgba(255, 45, 85, 0.6), 0 0 15px rgba(255, 107, 53, 0.3);
+    }
+}
+
+/* Chat Loading Animation */
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 0.4;
+    }
+
+    50% {
+        opacity: 1;
+    }
+}
+
+/* Slide In Animation for Chat Notifications */
+@keyframes slideIn {
+    0% {
+        transform: translateX(120%);
+        opacity: 0;
+    }
+
+    100% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideInLeft {
+    0% {
+        transform: translateX(-120%);
+        opacity: 0;
+    }
+
+    100% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Glow animation for premium profiles */
+@keyframes glow {
+
+    0%,
+    100% {
+        box-shadow: 0 0 5px rgba(255, 215, 0, 0.5), 0 0 20px rgba(255, 215, 0, 0.2);
+    }
+
+    50% {
+        box-shadow: 0 0 10px rgba(255, 215, 0, 0.8), 0 0 30px rgba(255, 215, 0, 0.4);
+    }
+}
+
+/* Neon border animation */
+@keyframes neonPulse {
+
+    0%,
+    100% {
+        border-color: rgba(255, 45, 85, 0.5);
+        box-shadow: 0 0 10px rgba(255, 45, 85, 0.3);
+    }
+
+    50% {
+        border-color: rgba(255, 107, 53, 0.8);
+        box-shadow: 0 0 20px rgba(255, 107, 53, 0.5);
+    }
+}
+
+/* Floating notification badges */
+.floating-notification {
+    animation: slideIn 0.5s ease-out, neonPulse 2s infinite;
+}
+
+/* Enhanced card with futuristic look */
+.futuristic-card {
+    background: linear-gradient(145deg, rgba(28, 28, 40, 0.9), rgba(14, 14, 20, 0.95));
+    border: 1px solid rgba(255, 45, 85, 0.2);
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+}
+
+.futuristic-card:hover {
+    border-color: rgba(255, 45, 85, 0.5);
+    box-shadow: 0 12px 40px rgba(255, 45, 85, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    transform: translateY(-4px);
+}
+
+/* Premium card glow */
+.premium-glow {
+    animation: glow 2s infinite ease-in-out;
+    border: 1px solid rgba(255, 215, 0, 0.3);
+}
+
+/* Status indicator with pulse */
+.status-pulse {
+    animation: pulse 2s infinite ease-in-out;
+}
+
+/* Mobile Responsive - Auto Chat Notifications */
+@media (max-width: 768px) {
+    .card-frame:hover {
+        transform: none;
+        box-shadow: none;
+    }
+
+    .glass {
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+        background: rgba(14, 14, 20, 0.95);
+    }
+
+    /* Chat notifications at bottom center for mobile */
+    .auto-chat-container {
+        position: fixed !important;
+        bottom: 90px !important;
+        left: 10px !important;
+        right: 10px !important;
+        width: auto !important;
+        z-index: 9999 !important;
+    }
+
+    .auto-chat-notification {
+        width: 100% !important;
+        padding: 10px 12px !important;
+        font-size: 12px !important;
+    }
+
+    .auto-chat-notification img {
+        width: 40px !important;
+        height: 40px !important;
+    }
+
+    /* Smaller profile cards on mobile */
+    .profile-card-mobile {
+        width: 140px !important;
+        min-width: 140px !important;
+    }
+
+    .profile-card-mobile img {
+        height: 160px !important;
+    }
+}
+
+/* Extra small devices */
+@media (max-width: 480px) {
+    .auto-chat-notification {
+        padding: 8px 10px !important;
+    }
+
+    .auto-chat-notification img {
+        width: 36px !important;
+        height: 36px !important;
+    }
+
+    .auto-chat-notification span {
+        font-size: 11px !important;
+    }
+}
+
+/* Profile Card Enhanced Styles */
+.profile-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 16px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.profile-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 60%;
+    background: linear-gradient(to bottom, transparent 60%, rgba(8, 8, 12, 0.95));
+    z-index: 1;
+    pointer-events: none;
+}
+
+.profile-card:hover {
+    transform: scale(1.03);
+    box-shadow: 0 12px 40px rgba(255, 45, 85, 0.15);
+}
+
+/* Premium Profile Highlight */
+.profile-premium {
+    border: 2px solid rgba(255, 215, 0, 0.4);
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.15);
+}
+
+/* Online indicator glow */
+.online-indicator {
+    width: 12px;
+    height: 12px;
+    background: var(--accent-green);
+    border-radius: 50%;
+    box-shadow: 0 0 8px var(--accent-green);
+    animation: pulse 2s infinite;
+}
+
+/* Badge futuristic */
+.badge-futuristic {
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
