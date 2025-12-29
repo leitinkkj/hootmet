@@ -1,5 +1,7 @@
 import React, { useState, useRef, useMemo, memo, useCallback, useEffect } from 'react';
 import './index.css';
+import FuturisticBackground from './components/FuturisticBackground';
+
 
 /* ==================== TYPES ==================== */
 interface Profile {
@@ -778,7 +780,8 @@ function App() {
     }, []);
 
     return (
-        <div style={{ minHeight: '100vh', background: '#08080C' }}>
+        <div style={{ minHeight: '100vh', background: '#05050a' }}>
+            <FuturisticBackground />
             <Header onToggleSidebar={() => setSidebarOpen(true)} />
             <FilterSidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
