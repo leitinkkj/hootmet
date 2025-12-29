@@ -1,4 +1,4 @@
-import React, { useState, useRef, useMemo, memo, useCallback, useEffect } from 'react';
+import React, { useState, useRef, memo, useCallback, useEffect } from 'react';
 import './index.css';
 import FuturisticBackground from './components/FuturisticBackground';
 
