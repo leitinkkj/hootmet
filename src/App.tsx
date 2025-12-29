@@ -533,7 +533,7 @@ const FilterSidebar = memo(({ isOpen, onClose }: { isOpen: boolean; onClose: () 
 });
 
 /* ==================== API FUNCTIONS ==================== */
-const API_URL = 'http://localhost:3001';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 
 interface SessionStartResponse {
     sessionId: string;
