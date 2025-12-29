@@ -765,8 +765,6 @@ function App() {
     const handlePixClick = useCallback(() => {
         // Open PIX checkout (you can replace this with your payment gateway)
         const pixKey = 'sua-chave-pix@email.com';
-        const amount = '70.00';
-        const description = 'Faxina Especial - Video Exclusivo';
 
         // For now, show alert with PIX info
         alert(`🧹 Faxina Especial - R$70,00\n\n📱 Chave PIX: ${pixKey}\n\nApós o pagamento, envie o comprovante no chat!`);
