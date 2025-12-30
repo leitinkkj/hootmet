@@ -3,26 +3,26 @@ export async function getUserLocation() {
     try {
         console.log('🌍 Detectando sua localização...');
 
-        // Tentar primeira API: ip-api.com (sem bloqueio de requests)
+        // Tentar primeira API: ipwho.is (HTTPS, gratuita, sem bloqueio)
         try {
-            const res1 = await fetch('http://ip-api.com/json/?fields=status,message,country,countryCode,region,city,lat,lon,timezone,query');
+            const res1 = await fetch('https://ipwho.is/');
             const data1 = await res1.json();
 
-            if (data1.status === 'success' && data1.city) {
-                console.log('✅ Localização detectada via ip-api:', data1.city, data1.region);
+            if (data1.success && data1.city) {
+                console.log('✅ Location detectada via ipwho.is:', data1.city, data1.region);
                 return {
-                    ip: data1.query,
+                    ip: data1.ip,
                     city: data1.city,
                     region: data1.region,
                     country: data1.country,
-                    countryCode: data1.countryCode,
-                    latitude: data1.lat,
-                    longitude: data1.lon,
-                    timezone: data1.timezone,
+                    countryCode: data1.country_code,
+                    latitude: data1.latitude,
+                    longitude: data1.longitude,
+                    timezone: data1.timezone?.id || 'America/Sao_Paulo',
                 };
             }
         } catch (e) {
-            console.warn('⚠️ ip-api falhou, tentando próxima...', e);
+            console.warn('⚠️ ipwho.is falhou, tentando próxima...', e);
         }
 
         // Tentar segunda API: ipapi.co
