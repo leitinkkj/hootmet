@@ -198,7 +198,12 @@ app.post("/api/session/message", async (req, res) => {
     res.json({ message: response, ...getSessionStats(sessionId) });
   } catch (error) {
     console.error("Message error:", error);
-    res.status(500).json({ error: error.message });
+
+    // When API fails (rate limit or error), respond as if she's offline
+    const offlineMessage = "Ops, estou offline agora 😔 Me chama daqui a pouco que eu volto! 💕";
+    addMessage(sessionId, 'assistant', offlineMessage);
+
+    res.json({ message: offlineMessage, ...getSessionStats(sessionId) });
   }
 });
 
