@@ -1,6 +1,7 @@
 import React, { useState, useRef, memo, useCallback, useEffect } from 'react';
 import './index.css';
 import FuturisticBackground from './components/FuturisticBackground';
+// v2.0 - Geolocalização e mensagens personalizadas
 import WelcomeToast from './components/WelcomeToast';
 import { getUserLocation, saveUserLocation, getSavedLocation } from './services/geolocation';
 
