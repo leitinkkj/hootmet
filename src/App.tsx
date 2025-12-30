@@ -594,7 +594,7 @@ async function sendSessionMessageAPI(sessionId: string, message: string): Promis
         });
         const data = await res.json();
         return {
-            message: data.message || 'Interessante! 😊',
+            message: data.message || 'Ops, estou offline agora 😔 Me chama daqui a pouco que eu volto! 💕',
             sessionId: data.sessionId || sessionId,
             messageCount: data.messageCount || 0,
             premiumSuggested: data.premiumSuggested || false,
@@ -602,7 +602,7 @@ async function sendSessionMessageAPI(sessionId: string, message: string): Promis
         };
     } catch {
         return {
-            message: 'Que legal! Me conta mais 😊',
+            message: 'Ops, estou offline agora 😔 Me chama daqui a pouco que eu volto! 💕',
             sessionId,
             messageCount: 0,
             premiumSuggested: false,
