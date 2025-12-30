@@ -59,33 +59,75 @@ ESTILO:
 - 1-2 emojis por mensagem
 - Respostas curtas e naturais`;
 
+
 // ==================== FUNCAO PARA CHAMAR IA ====================
 
 async function callGroqAPI(messages, maxTokens = 350) {
-  const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-    method: "POST",
-    headers: {
-      "Authorization": `Bearer ${process.env.GROQ_API_KEY}`,
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      model: "llama-3.3-70b-versatile",
-      messages,
-      temperature: 1.0,
-      max_tokens: maxTokens,
-      top_p: 0.95
-    })
-  });
+  // Lista de API keys disponíveis (fallback)
+  const apiKeys = [
+    process.env.GROQ_API_KEY,
+    process.env.GROQ_API_KEY_2,
+    process.env.GROQ_API_KEY_3
+  ].filter(Boolean); // Remove chaves vazias/undefined
 
-  if (!response.ok) {
-    const errorText = await response.text();
-    console.error("Groq API error:", errorText);
-    throw new Error(`Groq API error: ${response.status}`);
+  let lastError = null;
+
+  // Tenta cada API key sequencialmente
+  for (let i = 0; i < apiKeys.length; i++) {
+    const apiKey = apiKeys[i];
+
+    try {
+      console.log(`[Groq] Tentando API key ${i + 1}/${apiKeys.length}...`);
+
+      const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${apiKey}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          model: "llama-3.3-70b-versatile",
+          messages,
+          temperature: 1.0,
+          max_tokens: maxTokens,
+          top_p: 0.95
+        })
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error(`[Groq] API key ${i + 1} error:`, errorText);
+
+        // Se for erro 429 (rate limit), tenta próxima key
+        if (response.status === 429) {
+          lastError = new Error(`Groq API error: ${response.status}`);
+          continue; // Tenta próxima key
+        }
+
+        // Outros erros, throw imediato
+        throw new Error(`Groq API error: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log(`[Groq] ✅ API key ${i + 1} funcionou!`);
+      return data.choices[0].message.content;
+
+    } catch (error) {
+      lastError = error;
+      console.error(`[Groq] Erro na API key ${i + 1}:`, error.message);
+
+      // Se não for o último, continua tentando
+      if (i < apiKeys.length - 1) {
+        continue;
+      }
+    }
   }
 
-  const data = await response.json();
-  return data.choices[0].message.content;
+  // Se chegou aqui, todas as keys falharam
+  console.error("[Groq] ❌ Todas as API keys falharam!");
+  throw lastError || new Error("All Groq API keys failed");
 }
+
 
 function buildSystemPrompt(profile) {
   return `[ROLEPLAY] Voce e ${profile.name}, ${profile.age} anos.
