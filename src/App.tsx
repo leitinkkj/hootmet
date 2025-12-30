@@ -779,9 +779,43 @@ function App() {
         setActiveChat(null);
     }, []);
 
+    // ==================== GEOLOCALIZAÇÃO ====================
+    const [showWelcomeToast, setShowWelcomeToast] = useState(false);
+    const [userCity, setUserCity] = useState<string | null>(null);
+
+    // Detectar localização ao carregar
+    useEffect(() => {
+        const initLocation = async () => {
+            let location = getSavedLocation();
+            if (!location) {
+                location = await getUserLocation();
+                saveUserLocation(location);
+            }
+            setUserCity(location.city);
+
+            const hasSeenWelcome = sessionStorage.getItem('hasSeenWelcome');
+            if (!hasSeenWelcome) {
+                setShowWelcomeToast(true);
+                sessionStorage.setItem('hasSeenWelcome', 'true');
+                setTimeout(() => setShowWelcomeToast(false), 8000);
+            }
+        };
+        initLocation();
+    }, []);
+
     return (
         <div style={{ minHeight: '100vh', background: '#05050a' }}>
             <FuturisticBackground />
+
+            {/* Toast de Boas-Vindas */}
+            {showWelcomeToast && (
+                <WelcomeToast
+                    message="Bem-vindo ao HotMeet!"
+                    city={userCity || undefined}
+                    onClose={() => setShowWelcomeToast(false)}
+                />
+            )}
+
             <Header onToggleSidebar={() => setSidebarOpen(true)} />
             <FilterSidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
