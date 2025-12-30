@@ -567,12 +567,20 @@ async function startSessionAPI(profile: Profile, userCity?: string | null): Prom
         const data = await res.json();
         return {
             sessionId: data.sessionId || `fallback_${Date.now()}`,
-            messages: data.messages || ['Olá! 😊', 'Tudo bem?', 'Adorei seu perfil!']
+            messages: data.messages || (userCity && userCity !== 'sua cidade' ? [
+                `Oi! Você é de ${userCity}? 😍`,
+                'Adorei te ver por aqui!',
+                'Vem conversar comigo? 💕'
+            ] : ['Olá! 😊', 'Tudo bem?', 'Adorei seu perfil!'])
         };
     } catch {
         return {
             sessionId: `fallback_${Date.now()}`,
-            messages: ['Olá! 😊', 'Tudo bem com você?', 'Adorei seu perfil!']
+            messages: userCity && userCity !== 'sua cidade' ? [
+                `Oi! Você é de ${userCity}? 😍`,
+                'Adorei te ver por aqui!',
+                'Vem conversar comigo? 💕'
+            ] : ['Olá! 😊', 'Tudo bem com você?', 'Adorei seu perfil!']
         };
     }
 }
