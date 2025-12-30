@@ -104,23 +104,35 @@ app.get("/api/health", (req, res) => {
 // Iniciar sessao
 app.post("/api/session/start", async (req, res) => {
   try {
-    const { profileId, name, age, personality } = req.body;
-    console.log("Starting session for:", name, age);
+    const { profileId, name, age, personality, userCity } = req.body;
+    console.log("Starting session for:", name, age, "User city:", userCity);
 
     const session = createSession(profileId, { name, age, personality });
 
     if (!process.env.GROQ_API_KEY) {
-      const fallbackMessages = [
-        `Oi! Sou a ${name} 😊`,
-        "Gostei do seu perfil...",
-        "Vem conversar comigo? 😏"
-      ];
+      const city = userCity && userCity !== 'sua cidade' ? userCity : null;
+      const fallbackMessages = city
+        ? [
+          `Oi! Você é de ${city}? 😍`,
+          `Sou a ${name}, adorei te ver por aqui!`,
+          "Vem conversar comigo? 😏"
+        ]
+        : [
+          `Oi! Sou a ${name} 😊`,
+          "Gostei do seu perfil...",
+          "Vem conversar comigo? 😏"
+        ];
       fallbackMessages.forEach(msg => addMessage(session.sessionId, 'assistant', msg));
       return res.json({ sessionId: session.sessionId, messages: fallbackMessages });
     }
 
     const systemPrompt = buildSystemPrompt({ name, age, personality });
-    const prompt = `Crie 3 mensagens curtas e sedutoras para iniciar conversa. Cada mensagem deve ter no maximo 50 caracteres. Seja envolvente e provocadora. Retorne APENAS as 3 mensagens, uma por linha.`;
+
+    // Personalizar prompt baseado na cidade
+    const city = userCity && userCity !== 'sua cidade' ? userCity : null;
+    const cityMention = city ? `IMPORTANTE: Na primeira mensagem, mencione que voce viu que ele e de ${city}! Exemplo: "Oii, voce e de ${city}? Adorei!" ou "Opa, ${city}! Que legal 😍"` : '';
+
+    const prompt = `Crie 3 mensagens curtas e sedutoras para iniciar conversa. Cada mensagem deve ter no maximo 50 caracteres. Seja envolvente e provocadora. ${cityMention} Retorne APENAS as 3 mensagens, uma por linha.`;
 
     const messages = [
       { role: "system", content: systemPrompt },

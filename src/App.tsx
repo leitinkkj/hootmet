@@ -550,7 +550,7 @@ interface SessionMessageResponse {
     shouldShowPremiumButton: boolean;
 }
 
-async function startSessionAPI(profile: Profile): Promise<SessionStartResponse> {
+async function startSessionAPI(profile: Profile, userCity?: string | null): Promise<SessionStartResponse> {
     try {
         const res = await fetch(`${API_URL}/api/session/start`, {
             method: 'POST',
@@ -559,7 +559,8 @@ async function startSessionAPI(profile: Profile): Promise<SessionStartResponse> 
                 profileId: profile.id,
                 name: profile.name,
                 age: profile.age,
-                personality: profile.personality || 'Simpática, carismática e interessante'
+                personality: profile.personality || 'Simpática, carismática e interessante',
+                userCity: userCity || 'sua cidade' // Adiciona cidade do usuário
             })
         });
         const data = await res.json();
@@ -718,8 +719,8 @@ function App() {
         // Open chat modal immediately with loading state
         setActiveChat({ profile, messages: [], loading: true, sessionId: '', showPremiumButton: false, showPixButton: false });
 
-        // Start new session with API
-        const { sessionId, messages } = await startSessionAPI(profile);
+        // Start new session with API (incluindo cidade do usuário)
+        const { sessionId, messages } = await startSessionAPI(profile, userCity);
 
         // Update with received messages and sessionId
         setActiveChat({
@@ -730,7 +731,7 @@ function App() {
             showPremiumButton: false,
             showPixButton: false
         });
-    }, []);
+    }, [userCity]);
 
     const handleSendMessage = useCallback(async (message: string) => {
         if (!activeChat || !activeChat.sessionId) return;
