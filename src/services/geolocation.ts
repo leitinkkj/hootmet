@@ -1,27 +1,64 @@
-// Geolocation Service - Detecta localização do usuário via IP
+// Geolocation Service - Detecta localização do usuário via IP e GPS
 export async function getUserLocation() {
     try {
-        // Usando ipapi.co - API gratuita de geolocalização por IP
-        const response = await fetch('https://ipapi.co/json/');
+        console.log('🌍 Detectando sua localização...');
 
-        if (!response.ok) {
-            throw new Error('Failed to fetch location');
+        // Tentar primeira API: ip-api.com (sem bloqueio de requests)
+        try {
+            const res1 = await fetch('http://ip-api.com/json/?fields=status,message,country,countryCode,region,city,lat,lon,timezone,query');
+            const data1 = await res1.json();
+
+            if (data1.status === 'success' && data1.city) {
+                console.log('✅ Localização detectada via ip-api:', data1.city, data1.region);
+                return {
+                    ip: data1.query,
+                    city: data1.city,
+                    region: data1.region,
+                    country: data1.country,
+                    countryCode: data1.countryCode,
+                    latitude: data1.lat,
+                    longitude: data1.lon,
+                    timezone: data1.timezone,
+                };
+            }
+        } catch (e) {
+            console.warn('⚠️ ip-api falhou, tentando próxima...', e);
         }
 
-        const data = await response.json();
+        // Tentar segunda API: ipapi.co
+        try {
+            const res2 = await fetch('https://ipapi.co/json/');
+            if (res2.ok) {
+                const data2 = await res2.json();
+                if (data2.city) {
+                    console.log('✅ Localização detectada via ipapi.co:', data2.city, data2.region);
+                    return {
+                        ip: data2.ip,
+                        city: data2.city,
+                        region: data2.region || '',
+                        country: data2.country_name || 'Brasil',
+                        countryCode: data2.country_code || 'BR',
+                        latitude: data2.latitude,
+                        longitude: data2.longitude,
+                        timezone: data2.timezone,
+                    };
+                }
+            }
+        } catch (e) {
+            console.warn('⚠️ ipapi.co falhou, tentando GPS...', e);
+        }
 
-        return {
-            ip: data.ip,
-            city: data.city || 'sua cidade',
-            region: data.region || '',
-            country: data.country_name || 'Brasil',
-            countryCode: data.country_code || 'BR',
-            latitude: data.latitude,
-            longitude: data.longitude,
-            timezone: data.timezone,
-        };
+        // Se APIs de IP falharam, tentar GPS do navegador
+        console.log('📍 Tentando GPS do navegador...');
+        const gpsLocation = await getLocationFromNavigator();
+        if (gpsLocation) {
+            return gpsLocation;
+        }
+
+        throw new Error('Nenhuma API funcionou');
+
     } catch (error) {
-        console.error('Error getting user location:', error);
+        console.error('❌ Erro ao obter localização:', error);
 
         // Fallback para dados genéricos
         return {
@@ -36,6 +73,61 @@ export async function getUserLocation() {
         };
     }
 }
+
+// Usar GPS do navegador (mais preciso, mas pede permissão)
+async function getLocationFromNavigator(): Promise<any> {
+    return new Promise((resolve) => {
+        if (!navigator.geolocation) {
+            resolve(null);
+            return;
+        }
+
+        navigator.geolocation.getCurrentPosition(
+            async (position) => {
+                try {
+                    const { latitude, longitude } = position.coords;
+                    console.log('📍 GPS obtido:', latitude, longitude);
+
+                    // Fazer reverse geocoding para obter cidade
+                    const city = await reverseGeocode(latitude, longitude);
+
+                    resolve({
+                        ip: 'gps',
+                        city: city || 'sua cidade',
+                        region: '',
+                        country: 'Brasil',
+                        countryCode: 'BR',
+                        latitude,
+                        longitude,
+                        timezone: 'America/Sao_Paulo',
+                    });
+                } catch (error) {
+                    resolve(null);
+                }
+            },
+            () => {
+                console.log('❌ Permissão de GPS negada');
+                resolve(null);
+            },
+            { timeout: 5000 }
+        );
+    });
+}
+
+// Reverse geocoding - converter coordenadas em cidade
+async function reverseGeocode(lat: number, lon: number): Promise<string | null> {
+    try {
+        // Usar Nominatim (OpenStreetMap) - gratuito
+        const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&accept-language=pt-BR`);
+        const data = await res.json();
+        const city = data.address?.city || data.address?.town || data.address?.village || data.address?.municipality;
+        console.log('🏙️ Cidade via GPS:', city);
+        return city;
+    } catch (error) {
+        return null;
+    }
+}
+
 
 // Calcular distância entre duas coordenadas (em km)
 export function calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
