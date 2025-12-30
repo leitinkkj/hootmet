@@ -682,17 +682,44 @@ function App() {
     const [activeChat, setActiveChat] = useState<ActiveChat | null>(null);
     const [autoChats, setAutoChats] = useState<AutoChat[]>([]);
 
-    // Auto-start 2 chats when user enters
+    // ==================== GEOLOCALIZAÇÃO ====================
+    const [showWelcomeToast, setShowWelcomeToast] = useState(false);
+    const [userCity, setUserCity] = useState<string | null>(null);
+
+
+    // Detectar localização ao carregar
     useEffect(() => {
+        const initLocation = async () => {
+            let location = getSavedLocation();
+            if (!location) {
+                location = await getUserLocation();
+                saveUserLocation(location);
+            }
+            setUserCity(location.city);
+
+            const hasSeenWelcome = sessionStorage.getItem('hasSeenWelcome');
+            if (!hasSeenWelcome) {
+                setShowWelcomeToast(true);
+                sessionStorage.setItem('hasSeenWelcome', 'true');
+                setTimeout(() => setShowWelcomeToast(false), 8000);
+            }
+        };
+        initLocation();
+    }, []);
+
+    // Auto-start 2 chats AFTER geolocation is detected
+    useEffect(() => {
+        if (!userCity) return; // Wait for city to be detected
+
         const startAutoChats = async () => {
             // Select 2 random profiles
             const profile1 = SECTIONS[0].profiles[0]; // Ana Beatriz
             const profile2 = SECTIONS[1].profiles[1]; // Juliana from nearby
 
-            // Start sessions for both
+            // Start sessions for both WITH userCity
             const [session1, session2] = await Promise.all([
-                startSessionAPI(profile1),
-                startSessionAPI(profile2)
+                startSessionAPI(profile1, userCity),
+                startSessionAPI(profile2, userCity)
             ]);
 
             setAutoChats([
@@ -714,7 +741,8 @@ function App() {
         // Delay to simulate natural behavior
         const timer = setTimeout(startAutoChats, 2000);
         return () => clearTimeout(timer);
-    }, []);
+    }, [userCity]); // Trigger when userCity is set
+
 
     const handleStartChat = useCallback(async (profile: Profile) => {
         // Open chat modal immediately with loading state
@@ -781,9 +809,6 @@ function App() {
         setActiveChat(null);
     }, []);
 
-    // ==================== GEOLOCALIZAÇÃO ====================
-    const [showWelcomeToast, setShowWelcomeToast] = useState(false);
-    const [userCity, setUserCity] = useState<string | null>(null);
 
     // Detectar localização ao carregar
     useEffect(() => {
