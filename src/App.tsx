@@ -808,11 +808,14 @@ function App() {
         <div style={{ minHeight: '100vh', background: '#05050a' }}>
             <FuturisticBackground />
 
+
             {/* Toast de Boas-Vindas */}
             {showWelcomeToast && (
                 <WelcomeToast
                     message="Bem-vindo ao HotMeet!"
                     city={userCity || undefined}
+                    profileName="Valentina"
+                    profileAge={23}
                     onClose={() => setShowWelcomeToast(false)}
                 />
             )}

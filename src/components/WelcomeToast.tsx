@@ -5,32 +5,59 @@ interface ToastProps {
     message: string;
     city?: string;
     onClose: () => void;
+    profileName?: string;
+    profilePhoto?: string;
+    profileAge?: number;
 }
 
-const WelcomeToast: React.FC<ToastProps> = ({ message, city, onClose }) => {
+const WelcomeToast: React.FC<ToastProps> = ({
+    city,
+    onClose,
+    profileName = "Valentina",
+    profilePhoto,
+    profileAge = 23
+}) => {
+    const cityText = city && city !== 'sua cidade' ? city : null;
+
     return (
-        <div className="welcome-toast">
+        <div className="welcome-toast profile-toast">
             <button className="toast-close" onClick={onClose} aria-label="Fechar">
                 ✕
             </button>
 
-            <div className="toast-icon">
-                📍
-            </div>
+            {profilePhoto && (
+                <div className="toast-profile-photo">
+                    <img src={profilePhoto} alt={profileName} />
+                    <span className="online-dot"></span>
+                </div>
+            )}
 
             <div className="toast-content">
-                <h3 className="toast-title">Bem-vindo ao HotMeet!</h3>
-                <p className="toast-message">
-                    {city ? (
-                        <>
-                            Olá! Você é de <strong>{city}</strong> 🔥
-                            <br />
-                            <span className="toast-subtitle">Conecte-se com pessoas próximas de você</span>
-                        </>
-                    ) : (
-                        message
-                    )}
-                </p>
+                {cityText ? (
+                    <>
+                        <p className="toast-greeting">
+                            Oi! Você é de <strong>{cityText}</strong>? 😍
+                        </p>
+                        <p className="toast-intro">
+                            Sou a <strong>{profileName}</strong>, {profileAge} anos
+                        </p>
+                        <p className="toast-cta">
+                            Vem conversar comigo! 💕
+                        </p>
+                    </>
+                ) : (
+                    <>
+                        <p className="toast-greeting">
+                            Oi! Bem-vindo ao HotMeet! 😍
+                        </p>
+                        <p className="toast-intro">
+                            Sou a <strong>{profileName}</strong>, {profileAge} anos
+                        </p>
+                        <p className="toast-cta">
+                            Conecte-se com pessoas incríveis! 💕
+                        </p>
+                    </>
+                )}
             </div>
         </div>
     );
